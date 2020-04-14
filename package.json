@@ -1,0 +1,16 @@
+{
+  "name": "newman-server",
+  "private": true,
+  "version": "1.0.0",
+  "description": "",
+  "main": "bin/server.js",
+  "scripts": {
+    "start": "node bin/server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "newman": "^5.0.0"
+  }
+}
