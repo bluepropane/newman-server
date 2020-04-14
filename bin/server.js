@@ -8,32 +8,34 @@ function extractData(req) {
       data.push(chunk);
     });
     req.on('end', () => {
-      res(JSON.parse(data));
+      res(JSON.parse(data.join('')));
     });
   });
 }
 
 function runCollection(collection) {
-  return newman.run(
-    {
-      collection,
-      reporters: 'cli',
-    },
-    function (err) {
-      if (err) {
-        throw err;
-      }
-      console.log(arguments);
-      console.log('collection run complete!');
-    }
-  );
+  return new Promise((res) => {
+    newman.run(
+      {
+        collection,
+        reporters: 'cli',
+      },
+      (err, summary) => res([err, summary])
+    );
+  });
 }
 
 http
   .createServer(async function (req, res) {
     const collection = await extractData(req);
-    await runCollection(collection);
-    res.write('Hello World!'); //write a response to the client
-    res.end(); //end the response
+    const [err, summary] = await runCollection(collection);
+    // console.log(err, result);
+    const success = !err && summary.error && result.run.failures.length === 0;
+
+    if (success) {
+      res.end(); //end the response
+    } else {
+      res.writeHead(400).end();
+    }
   })
   .listen(8080); //the server object listens on port 8080

@@ -1,7 +1,10 @@
 FROM node:13
 
-WORKDIR /
-COPY bin .
-RUN npm install
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
+WORKDIR /usr/src/app
+COPY package.json package-lock.json ./
+RUN npm ci
+COPY bin bin
 
-CMD ['npm', 'start']
+CMD ["npm", "start"]
