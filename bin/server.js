@@ -1,6 +1,8 @@
 const http = require('http');
 const newman = require('newman');
 
+const port = process.env.NEWMAN_PORT || 8080;
+
 function extractData(req) {
   return new Promise((res) => {
     const data = [];
@@ -29,13 +31,14 @@ http
   .createServer(async function (req, res) {
     const collection = await extractData(req);
     const [err, summary] = await runCollection(collection);
-    // console.log(err, result);
     const success = !err && summary.error && result.run.failures.length === 0;
 
     if (success) {
-      res.end(); //end the response
+      res.end();
     } else {
       res.writeHead(400).end();
     }
   })
-  .listen(8080); //the server object listens on port 8080
+  .listen(port);
+
+console.log(`[newman-server] Listening on port ${port}`);
