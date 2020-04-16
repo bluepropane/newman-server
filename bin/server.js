@@ -1,6 +1,5 @@
 const http = require('http');
 const newman = require('newman');
-const PostmanCLIReporter = require('newman/lib/reporters/cli');
 const util = require('util');
 
 const listeners = {};
